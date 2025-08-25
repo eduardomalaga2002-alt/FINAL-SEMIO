@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscripción al Taller</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <h1>Taller de Introducción a la Impresión 3D</h1>
+  </header>
+
+  <main>
+    <div class="container">
+      <section id="form-section">
+        <h2>Formulario de Inscripción</h2>
+        <form id="workshopForm">
+          <label for="date">Fecha:</label>
+          <select id="date" name="date" required>
+            <option value="">Selecciona una fecha</option>
+            </select>
+
+          <label for="slot">Horario:</label>
+          <select id="slot" name="slot" required>
+            <option value="">Selecciona un horario</option>
+            </select>
+
+          <p id="capacity-info" class="info-message"></p>
+
+          <label for="name">Nombre Completo:</label>
+          <input type="text" id="name" name="name" required>
+
+          <label for="email">Correo Electrónico:</label>
+          <input type="email" id="email" name="email" required>
+
+          <label for="dni">DNI:</label>
+          <input type="text" id="dni" name="dni" required>
+
+          <label for="phone">Teléfono (opcional):</label>
+          <input type="tel" id="phone" name="phone">
+
+          <label for="obs">Observaciones (opcional):</label>
+          <textarea id="obs" name="obs" rows="3"></textarea>
+
+          <button type="submit" id="submitBtn">Inscribirse</button>
+        </form>
+        <div id="statusMessage" class="info-message"></div>
+      </section>
+
+      <section id="login-section" style="display: none;">
+        <h2>¿Ya estás inscrito?</h2>
+        <p>Consulta o elimina tu inscripción.</p>
+        <form id="loginForm">
+          <label for="loginEmail">Correo Electrónico:</label>
+          <input type="email" id="loginEmail" name="loginEmail" required>
+          <button type="submit">Consultar</button>
+        </form>
+        <button id="showFormBtn">Volver al formulario</button>
+      </section>
+
+      <section id="user-info-section" style="display: none;">
+        <h2>Mis Inscripciones</h2>
+        <div id="registrationsList"></div>
+        <button id="logoutBtn">Cerrar sesión</button>
+        <div id="deleteMessage" class="info-message"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Taller de Impresión 3D</p>
+  </footer>
+
+  <script>
+    // URL del script de Google Apps
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4THtMkGM5KYZHcbEZvZsWsba-LGoQCg5C7YFxgEf0oiPaETczk6WcNBkOKZ6uSUY/exec';
+    
+    // El resto de tu código JavaScript...
+    // ...
+    // Funciones de gestión del formulario, etc.
+    // ...
+    
+    // Aquí está el código JavaScript completo para la interacción con el script
+    
+    const workshopForm = document.getElementById('workshopForm');
+    const loginForm = document.getElementById('loginForm');
+    const showFormBtn = document.getElementById('showFormBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMessage = document.getElementById('statusMessage');
+    const deleteMessage = document.getElementById('deleteMessage');
+    const formSection = document.getElementById('form-section');
+    const loginSection = document.getElementById('login-section');
+    const userInfoSection = document.getElementById('user-info-section');
+    const registrationsList = document.getElementById('registrationsList');
+    const capacityInfo = document.getElementById('capacity-info');
+    const dateSelect = document.getElementById('date');
+    const slotSelect = document.getElementById('slot');
+    const daysWithSlots = ['2024-06-15', '2024-06-16'];
+    const availableSlots = ['15-17', '17-19'];
+    let userEmail = null;
+
+    // Función para mostrar mensajes de estado
+    function showStatus(message, isError = false) {
+      statusMessage.textContent = message;
+      statusMessage.style.color = isError ? '#d9534f' : '#5cb85c';
+    }
+
+    // Llenar las opciones de fecha dinámicamente
+    daysWithSlots.forEach(day => {
+      const option = document.createElement('option');
+      option.value = day;
+      option.textContent = day;
+      dateSelect.appendChild(option);
+    });
+
+    // Llenar las opciones de horario dinámicamente
+    availableSlots.forEach(slot => {
+      const option = document.createElement('option');
+      option.value = slot;
+      option.textContent = slot;
+      slotSelect.appendChild(option);
+    });
+
+    // Función para obtener y mostrar la capacidad
+    async function updateCapacity() {
+      const date = dateSelect.value;
+      const slot = slotSelect.value;
+
+      if (!date || !slot) {
+        capacityInfo.textContent = 'Selecciona una fecha y un horario para ver el cupo.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getCapacity`);
+        if (!response.ok) throw new Error('Error al obtener la capacidad.');
+        const data = await response.json();
+
+        if (data.success) {
+          const currentCount = data.data[date]?.[slot] || 0;
+          const remaining = 5 - currentCount;
+          capacityInfo.textContent = `Cupo disponible: ${remaining} de 5`;
+          
+          if (remaining <= 0) {
+            capacityInfo.style.color = 'red';
+            submitBtn.disabled = true;
+          } else {
+            capacityInfo.style.color = '#5cb85c';
+            submitBtn.disabled = false;
+          }
+        } else {
+          capacityInfo.textContent = `Error: ${data.message}`;
+          capacityInfo.style.color = 'red';
+          submitBtn.disabled = false;
+        }
+      } catch (error) {
+        capacityInfo.textContent = 'Error al cargar el cupo. Inténtalo de nuevo más tarde.';
+        capacityInfo.style.color = 'red';
+        submitBtn.disabled = true;
+      }
+    }
+
+    dateSelect.addEventListener('change', updateCapacity);
+    slotSelect.addEventListener('change', updateCapacity);
+
+    // Manejar el envío del formulario de inscripción
+    workshopForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      showStatus('Procesando tu inscripción...');
+
+      const formData = new FormData(this);
+      const payload = {
+        action: 'create',
+        data: {
+          date: formData.get('date'),
+          slot: formData.get('slot'),
+          topic: 'Impresión 3D',
+          name: formData.get('name'),
+          email: formData.get('email'),
+          dni: formData.get('dni'),
+          phone: formData.get('phone'),
+          obs: formData.get('obs')
+        }
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          showStatus(data.message);
+          workshopForm.reset();
+          updateCapacity();
+        } else {
+          showStatus(data.message, true);
+        }
+      } catch (error) {
+        showStatus('Error al enviar datos: ' + error.message, true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Inscribirse';
+      }
+    });
+
+    // Manejar el formulario de inicio de sesión
+    loginForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+      userEmail = document.getElementById('loginEmail').value;
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ action: 'read', email: userEmail })
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          displayRegistrations(data.data);
+          formSection.style.display = 'none';
+          loginSection.style.display = 'none';
+          userInfoSection.style.display = 'block';
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (error) {
+        alert('Error al consultar inscripciones: ' + error.message);
+      }
+    });
+
+    // Mostrar las inscripciones del usuario
+    function displayRegistrations(registrations) {
+      registrationsList.innerHTML = '';
+      if (registrations.length === 0) {
+        registrationsList.innerHTML = '<p>No tienes inscripciones activas.</p>';
+        return;
+      }
+
+      const ul = document.createElement('ul');
+      registrations.forEach(reg => {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>Taller:</strong> ${reg.tema}<br>
+                        <strong>Fecha:</strong> ${reg.fecha}<br>
+                        <strong>Horario:</strong> ${reg.horario}`;
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Eliminar';
+        deleteButton.classList.add('delete-btn');
+        deleteButton.addEventListener('click', () => deleteRegistration(reg.email, reg.fecha, reg.horario, li));
+        
+        li.appendChild(deleteButton);
+        ul.appendChild(li);
+      });
+      registrationsList.appendChild(ul);
+    }
+
+    // Eliminar una inscripción
+    async function deleteRegistration(email, date, slot, listItem) {
+      if (!confirm('¿Estás seguro de que quieres cancelar esta inscripción?')) {
+        return;
+      }
+
+      deleteMessage.textContent = 'Eliminando...';
+      deleteMessage.style.color = '#5cb85c';
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ action: 'delete', email: email, date: date, slot: slot })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          deleteMessage.textContent = data.message;
+          listItem.remove(); // Elimina el elemento de la lista en la interfaz
+          updateCapacity(); // Actualiza los cupos
+        } else {
+          deleteMessage.textContent = 'Error al eliminar: ' + data.message;
+          deleteMessage.style.color = '#d9534f';
+        }
+      } catch (error) {
+        deleteMessage.textContent = 'Error al eliminar inscripción: ' + error.message;
+        deleteMessage.style.color = '#d9534f';
+      }
+    }
+
+    // Manejar el cambio de vista
+    showFormBtn.addEventListener('click', () => {
+      formSection.style.display = 'block';
+      loginSection.style.display = 'none';
+    });
+
+    // Alternar entre formulario e inicio de sesión
+    document.querySelector('.container h2:nth-of-type(2)').addEventListener('click', () => {
+      formSection.style.display = 'none';
+      loginSection.style.display = 'block';
+      userInfoSection.style.display = 'none';
+    });
+
+    // Cerrar sesión
+    logoutBtn.addEventListener('click', () => {
+      userEmail = null;
+      userInfoSection.style.display = 'none';
+      formSection.style.display = 'block';
+      loginSection.style.display = 'none';
+    });
+
+    // Cargar la capacidad inicial al cargar la página
+    window.onload = updateCapacity;
+  </script>
+
+</body>
+
+</html>
