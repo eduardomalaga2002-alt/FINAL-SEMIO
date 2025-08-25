@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inscripción a Talleres - Centro de Simulación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-radius: 0 0 var(--radius) var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 25px;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 992px) {
+            .grid {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 i {
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .inline-fields {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .inline-fields {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 25px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e0355f;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .status-msg {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: var(--radius);
+            font-size: 0.95rem;
+        }
+
+        .success {
+            background: rgba(6, 214, 160, 0.15);
+            color: #059a71;
+            border: 1px solid rgba(6, 214, 160, 0.3);
+        }
+
+        .error {
+            background: rgba(239, 71, 111, 0.15);
+            color: #d32f55;
+            border: 1px solid rgba(239, 71, 111, 0.3);
+        }
+
+        .loading {
+            background: rgba(255, 209, 102, 0.15);
+            color: #d4a747;
+            border: 1px solid rgba(255, 209, 102, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .capacity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .capacity-high {
+            background: rgba(6, 214, 160, 0.15);
+            color: #059a71;
+        }
+
+        .capacity-medium {
+            background: rgba(255, 209, 102, 0.2);
+            color: #d4a747;
+        }
+
+        .capacity-low {
+            background: rgba(239, 71, 111, 0.15);
+            color: #d32f55;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .my-registrations {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .my-registrations h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .no-registrations {
+            text-align: center;
+            padding: 30px;
+            color: var(--gray);
+        }
+
+        .no-registrations i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-flex;
+            margin-left: 5px;
+        }
+
+        .tooltip i {
+            color: var(--gray);
+            cursor: help;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background: var(--dark);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            font-weight: normal;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1><i class="fas fa-microscope"></i> Inscripción a Talleres de Semiología</h1>
+        <p>Centro de Simulación · Del 4 de septiembre al 6 de noviembre de 2025</p>
+        <div class="badge"><i class="fas fa-info-circle"></i> Cupo máximo: 5 personas por turno</div>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <section class="card">
+                <h2><i class="fas fa-edit"></i> Formulario de inscripción</h2>
+                <form id="signupForm">
+                    <div class="inline-fields">
+                        <div class="form-group">
+                            <label for="date">Fecha <span class="tooltip"><i class="fas fa-question-circle"></i><span
+                                        class="tooltip-text">Selecciona la fecha en la que deseas participar</span></span></label>
+                            <select id="date" required>
+                                <option value="">Selecciona una fecha</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="slot">Horario <span class="tooltip"><i class="fas fa-question-circle"></i><span
+                                        class="tooltip-text">Elige el turno que prefieres</span></span></label>
+                            <select id="slot" required>
+                                <option value="">Selecciona un horario</option>
+                                <option value="15-17">15:00 – 17:00</option>
+                                <option value="17-19">17:00 – 19:00</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topic">Tema del taller <span class="tooltip"><i class="fas fa-question-circle"></i><span
+                                    class="tooltip-text">Elige el tema del taller que te interesa</span></span></label>
+                        <select id="topic" required disabled>
+                            <option value="">Selecciona una fecha primero</option>
+                        </select>
+                    </div>
+
+                    <div class="inline-fields">
+                        <div class="form-group">
+                            <label for="name">Nombre completo</label>
+                            <input id="name" type="text" required placeholder="Tu nombre y apellidos">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo institucional</label>
+                            <input id="email" type="email" required placeholder="tucorreo@unsa.edu.pe">
+                        </div>
+                    </div>
+
+                    <div class="inline-fields">
+                        <div class="form-group">
+                            <label for="dni">DNI</label>
+                            <input id="dni" type="text" required placeholder="Número de DNI" pattern="[0-9]{8}">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Teléfono (opcional)</label>
+                            <input id="phone" type="tel" placeholder="Número de contacto">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="obs">Observaciones (opcional) <span class="tooltip"><i
+                                    class="fas fa-question-circle"></i><span class="tooltip-text">Información adicional que debamos
+                                    conocer</span></span></label>
+                        <input id="obs" type="text" placeholder="Necesidades específicas, etc.">
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary btn-full"><i class="fas fa-paper-plane"></i> Inscribirme</button>
+                    </div>
+                    <div id="statusMsg" class="status-msg"></div>
+                </form>
+
+                <div class="my-registrations">
+                    <h3><i class="fas fa-user-check"></i> Mis inscripciones</h3>
+                    <div class="form-group">
+                        <label for="myEmail">Ingresa tu correo para ver o anular inscripciones</label>
+                        <div class="inline-fields">
+                            <input id="myEmail" type="email" placeholder="tucorreo@unsa.edu.pe">
+                            <button id="loadMyRegs" class="btn btn-ghost"><i class="fas fa-search"></i> Buscar</button>
+                        </div>
+                    </div>
+                    <div id="myRegsWrap">
+                        <div id="noRegs" class="no-registrations">
+                            <i class="fas fa-inbox"></i>
+                            <p>No se encontraron inscripciones</p>
+                        </div>
+                        <table id="myRegsTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Horario</th>
+                                    <th>Tema</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="card">
+                <h2><i class="fas fa-chart-bar"></i> Cupos disponibles</h2>
+                <p>Consulta la disponibilidad por fecha y horario</p>
+                <table id="capacityTable">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tema</th>
+                            <th>15:00–17:00</th>
+                            <th>17:00–19:00</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Semiología – Centro de Simulación | Universidad Nacional de San Agustín</p>
+        <p>Límite de 5 participantes por turno</p>
+    </footer>
+
+    <script>
+        // ==== CONFIGURACIÓN DEL EVENTO ====
+        const MAX_CAPACITY = 5; // MODIFICADO: Límite de 5 cupos por turno
+        // Se actualiza la estructura de los talleres para vincular cada fecha con un tema
+        const schedule = [{
+            date: new Date(2025, 8, 4),
+            topic: 'Inducción, seguridad y entrevista clínica'
+        }, {
+            date: new Date(2025, 8, 11),
+            topic: 'Signos vitales y examen general'
+        }, {
+            date: new Date(2025, 8, 18),
+            topic: 'Cabeza y cuello + ORL'
+        }, {
+            date: new Date(2025, 8, 25),
+            topic: 'Cardiovascular'
+        }, {
+            date: new Date(2025, 9, 2),
+            topic: 'Respiratorio'
+        }, {
+            date: new Date(2025, 9, 9),
+            topic: 'Abdomen'
+        }, {
+            date: new Date(2025, 9, 16),
+            topic: 'Neurológico'
+        }, {
+            date: new Date(2025, 9, 23),
+            topic: 'Musculoesquelético'
+        }, {
+            date: new Date(2025, 9, 30),
+            topic: 'Urogenital, mama y examen rectal'
+        }, {
+            date: new Date(2025, 10, 6),
+            topic: 'Pediatría y obstetricia (intro)'
+        }];
+        // Los horarios han sido actualizados
+        const slotLabels = {
+            '15-17': '15:00 – 17:00',
+            '17-19': '17:00 – 19:00'
+        };
+
+        // **URL DE GOOGLE APPS SCRIPT**
+        // CORRECCIÓN: La URL ha sido actualizada con el ID de implementación correcto
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYLQ3HikcbNBANQVf8h3lCSqbJi9HitY84ByNhEZhFclzJ91pwWP8LL1UMXMRBvHM/exec';
+
+        // --- FUNCIONES DE UTILIDAD ---
+        const showStatusMessage = (message, type = 'success') => {
+            const statusElement = document.getElementById('statusMsg');
+            statusElement.textContent = message;
+            statusElement.className = `status-msg ${type}`;
+            setTimeout(() => {
+                statusElement.textContent = '';
+                statusElement.className = 'status-msg';
+            }, 5000);
+        };
+
+        const formatDate = (date) => {
+            return new Date(date).toLocaleDateString('es-PE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        };
+
+        const populateSelectors = () => {
+            const dateSelect = document.getElementById('date');
+            const topicSelect = document.getElementById('topic');
+
+            dateSelect.innerHTML = '<option value="">Selecciona una fecha</option>';
+            schedule.forEach(item => {
+                const dateStr = item.date.toISOString().split('T')[0];
+                const option = document.createElement('option');
+                option.value = dateStr;
+                option.textContent = formatDate(item.date);
+                dateSelect.appendChild(option);
+            });
+
+            // Lógica para sincronizar la fecha y el tema
+            dateSelect.addEventListener('change', (e) => {
+                const selectedDateStr = e.target.value;
+                if (selectedDateStr) {
+                    const selectedItem = schedule.find(item => item.date.toISOString().split('T')[0] === selectedDateStr);
+                    topicSelect.innerHTML = `<option value="${selectedItem.topic}">${selectedItem.topic}</option>`;
+                    topicSelect.disabled = true;
+                } else {
+                    topicSelect.innerHTML = '<option value="">Selecciona una fecha primero</option>';
+                    topicSelect.disabled = true;
+                }
+            });
+        };
+
+        // --- INTERACCIÓN CON GOOGLE APPS SCRIPT ---
+
+        // 1. Obtiene los cupos disponibles (para la tabla de la derecha)
+        const getCapacityData = async () => {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getCapacity`);
+                if (!response.ok) {
+                    throw new Error('Error al obtener los datos de capacidad');
+                }
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.message);
+                }
+                return data.data;
+            } catch (error) {
+                console.error('Error:', error);
+                showStatusMessage('No se pudieron cargar los cupos disponibles.', 'error');
+                return {};
+            }
+        };
+
+        // 2. Envía la inscripción (acción 'create')
+        const submitToGoogleSheets = async (formData) => {
+            showStatusMessage('Enviando datos, por favor espere...', 'loading');
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'create',
+                        data: formData
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error('Error de red al enviar el formulario.');
+                }
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error al enviar datos:', error);
+                throw new Error('Error de conexión. Por favor, verifica tu conexión a internet.');
+            }
+        };
+
+        // 3. Busca inscripciones por email (acción 'read')
+        const getRegistrationsByEmail = async (email) => {
+            showStatusMessage('Buscando inscripciones...', 'loading');
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'read',
+                        email: email
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error('Error de red al buscar inscripciones.');
+                }
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error al buscar inscripciones:', error);
+                throw new Error('Error al buscar inscripciones.');
+            }
+        };
+
+        // 4. Elimina una inscripción (acción 'delete')
+        const deleteRegistration = async (email, date, slot) => {
+            try {
+                showStatusMessage('Eliminando inscripción...', 'loading');
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        email,
+                        date,
+                        slot
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error('Error de red al eliminar la inscripción.');
+                }
+                const result = await response.json();
+                return result;
+            } catch (error) {
+                console.error('Error al eliminar inscripción:', error);
+                throw new Error('Error al eliminar la inscripción.');
+            }
+        };
+
+        // --- MANEJO DE VISTA Y EVENTOS ---
+
+        const renderCapacityTable = async () => {
+            const capacityData = await getCapacityData();
+            const tableBody = document.querySelector('#capacityTable tbody');
+            tableBody.innerHTML = '';
+
+            schedule.forEach(item => {
+                const dateStr = item.date.toISOString().split('T')[0];
+                const row = document.createElement('tr');
+                const dateCell = document.createElement('td');
+                dateCell.textContent = formatDate(item.date);
+                dateCell.style.fontWeight = '600';
+                row.appendChild(dateCell);
+
+                const topicCell = document.createElement('td');
+                topicCell.textContent = item.topic;
+                topicCell.style.fontSize = '0.9rem';
+                row.appendChild(topicCell);
+
+                ['15-17', '17-19'].forEach(slot => {
+                    const slotCell = document.createElement('td');
+                    const count = capacityData[dateStr]?.[slot] || 0;
+                    const available = MAX_CAPACITY - count;
+                    const percentage = (count / MAX_CAPACITY) * 100;
+
+                    let badgeClass = 'capacity-high';
+                    if (available <= 2) badgeClass = 'capacity-medium';
+                    if (available <= 1) badgeClass = 'capacity-low';
+                    if (available === 0) badgeClass = 'capacity-low';
+
+                    slotCell.innerHTML = `
+                             <div>${available} / ${MAX_CAPACITY} disponibles</div>
+                             <div class="capacity-badge ${badgeClass}">
+                                 <i class="fas ${available > 0 ? 'fa-check' : 'fa-times'}"></i>
+                                 ${available > 0 ? 'Disponible' : 'Lleno'}
+                             </div>
+                             <div class="progress-bar">
+                                 <div class="progress-fill" style="width: ${percentage}%"></div>
+                             </div>
+                             `;
+                    row.appendChild(slotCell);
+                });
+                tableBody.appendChild(row);
+            });
+        };
+
+        const loadUserRegistrations = async (email) => {
+            const table = document.getElementById('myRegsTable');
+            const tableBody = table.querySelector('tbody');
+            const noRegsElement = document.getElementById('noRegs');
+
+            try {
+                const result = await getRegistrationsByEmail(email);
+
+                if (result.success && result.data.length > 0) {
+                    tableBody.innerHTML = '';
+                    result.data.forEach(reg => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                                    <td>${formatDate(new Date(reg.fecha))}</td>
+                                    <td>${slotLabels[reg.horario] || reg.horario}</td>
+                                    <td>${reg.tema}</td>
+                                    <td>
+                                        <button class="btn btn-danger delete-btn" 
+                                                data-date="${reg.fecha}" 
+                                                data-slot="${reg.horario}" 
+                                                data-email="${reg.email}">
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
+                                    </td>
+                                    `;
+                        tableBody.appendChild(row);
+                    });
+
+                    noRegsElement.style.display = 'none';
+                    table.style.display = 'table';
+                } else {
+                    table.style.display = 'none';
+                    noRegsElement.style.display = 'block';
+                }
+                showStatusMessage(result.message || 'Búsqueda completada.', result.success ? 'success' : 'error');
+            } catch (error) {
+                showStatusMessage(error.message, 'error');
+            }
+        };
+
+        const initializeApp = () => {
+            populateSelectors();
+            renderCapacityTable();
+
+            document.getElementById('signupForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = {
+                    date: document.getElementById('date').value,
+                    slot: document.getElementById('slot').value,
+                    topic: document.getElementById('topic').value,
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    dni: document.getElementById('dni').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    obs: document.getElementById('obs').value.trim(),
+                };
+
+                if (!formData.date || !formData.slot || !formData.topic || !formData.name || !formData.email || !formData.dni) {
+                    showStatusMessage('Por favor, complete todos los campos obligatorios.', 'error');
+                    return;
+                }
+
+                if (!formData.email.endsWith('@unsa.edu.pe')) {
+                    showStatusMessage('Debe utilizar un correo institucional @unsa.edu.pe', 'error');
+                    return;
+                }
+
+                if (!/^\d{8}$/.test(formData.dni)) {
+                    showStatusMessage('El DNI debe contener 8 dígitos numéricos.', 'error');
+                    return;
+                }
+
+                try {
+                    const result = await submitToGoogleSheets(formData);
+                    showStatusMessage(result.message, result.success ? 'success' : 'error');
+                    if (result.success) {
+                        document.getElementById('signupForm').reset();
+                        renderCapacityTable();
+                    }
+                } catch (error) {
+                    showStatusMessage(error.message, 'error');
+                }
+            });
+
+            document.getElementById('loadMyRegs').addEventListener('click', () => {
+                const email = document.getElementById('myEmail').value.trim();
+                if (!email || !email.endsWith('@unsa.edu.pe')) {
+                    showStatusMessage('Por favor, ingrese un correo institucional válido.', 'error');
+                    return;
+                }
+                loadUserRegistrations(email);
+            });
+
+            document.getElementById('myRegsTable').addEventListener('click', async (e) => {
+                if (e.target.closest('.delete-btn')) {
+                    const btn = e.target.closest('.delete-btn');
+                    const email = btn.dataset.email;
+                    const date = btn.dataset.date;
+                    const slot = btn.dataset.slot;
+
+                    const result = await deleteRegistration(email, date, slot);
+                    showStatusMessage(result.message, result.success ? 'success' : 'error');
+                    if (result.success) {
+                        loadUserRegistrations(email);
+                        renderCapacityTable();
+                    }
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+
+</html>
